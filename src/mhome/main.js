@@ -1,23 +1,22 @@
-import Header from '../header/header';
-import Hero from '../hero/hero';
-import Footer from '../footer/footer';
-import Contact from '../contact/contact';
-import About from '../about/about';
-import Tours from '../tours/tours';
-import Testimonials from '../testimonials/testimonials';
+import Header from "../header/header";
+import Hero from "../hero/hero";
+import Footer from "../footer/footer";
+import Contact from "../contact/contact";
+import About from "../about/about";
+import Tours from "../tours/tours";
+import Testimonials from "../testimonials/testimonials";
 
 export default function Mhome() {
     return (
         <>
             <Header />
 
-            {/* Each component should have its own ID */}
-            <main>
-                <Hero /> {/* Hero should have id="home" */}
-                <Tours /> {/* Tours should have id="tours" */}
-                <About /> {/* About should have id="about" */}
-                <Testimonials /> {/* Testimonials should have id="testimonials" */}
-                <Contact /> {/* Contact should have id="contact" */}
+            <main className="relative bg-[#070b14] overflow-x-hidden">
+                <Hero />         {/* id="home" */}
+                <Tours />        {/* id="tours" */}
+                <About />        {/* id="about" */}
+                <Testimonials />{/* id="testimonials" */}
+                <Contact />      {/* id="contact" */}
             </main>
 
             <Footer />

@@ -1,5 +1,29 @@
 @import "tailwindcss";
 
+/* -------------------------------------------------- */
+/* Base document styles (MANDATORY)                    */
+/* -------------------------------------------------- */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: #070b14; /* your dark site base */
+  overflow-x: hidden;
+}
+
+/* Remove scrollbar gutter painting (Chrome / Edge) */
+body::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Firefox */
+body {
+  scrollbar-width: none;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
