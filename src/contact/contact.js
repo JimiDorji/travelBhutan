@@ -8,40 +8,51 @@ export default function Contact() {
     const [loading, setLoading] = useState(false)
     const [status, setStatus] = useState(null)
 
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        // Or for specific format: return date.toISOString().split('T')[0];
+    };
+
     const sendEmail = async (e) => {
         e.preventDefault()
         setLoading(true)
         setStatus(null)
 
         try {
-            console.log('Form data:', {
-                first_name: formRef.current.first_name.value,
-                last_name: formRef.current.last_name.value,
-                email: formRef.current.email.value,
-                message: formRef.current.message.value
-            })
+            // Create form data manually to control values
+            const formData = new FormData(formRef.current);
+            const data = {
+                first_name: formData.get('first_name'),
+                last_name: formData.get('last_name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                start_date: formatDate(formData.get('start_date')),
+                end_date: formatDate(formData.get('end_date')),
+                message: formData.get('message'),
+                time: new Date().toLocaleString(),
+                name: `${formData.get('first_name')} ${formData.get('last_name')}`
+            };
 
-            const result = await emailjs.sendForm(
+            console.log('Sending data:', data);
+
+            await emailjs.send(
                 process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
                 process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-                formRef.current,
+                data,
                 process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
             )
 
-            console.log('EmailJS success:', result.text)
             setStatus('success')
             formRef.current.reset()
-
         } catch (error) {
-            console.error('EmailJS full error:', error)
-            console.error('Error status:', error.status)
-            console.error('Error text:', error.text)
-
-            if (error.text) {
-                setStatus(`error: ${error.text}`)
-            } else {
-                setStatus('error')
-            }
+            console.error('EmailJS error:', error)
+            setStatus('error')
         } finally {
             setLoading(false)
         }
