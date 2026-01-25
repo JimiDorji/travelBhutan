@@ -35,7 +35,7 @@ export default function Hero() {
     };
 
     return (
-        <section id="hero" className="relative min-h-screen overflow-hidden">
+        <section id="home" className="relative min-h-screen overflow-hidden">
             {/* Background Slideshow */}
             <div className="absolute inset-0">
                 {BACKGROUNDS.map((src, index) => (
@@ -162,7 +162,7 @@ export default function Hero() {
         </section>
     );
 <<<<<<< HEAD
-} 
+}
 =======
-} 
+}
 >>>>>>> 232999dc85f76724436ae052037d2baadcd3de6e

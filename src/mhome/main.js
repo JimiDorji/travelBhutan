@@ -12,7 +12,7 @@ export default function Mhome() {
             <Header />
 
             {/* Each component should have its own ID */}
-            <main id="home">
+            <main>
                 <Hero /> {/* Hero should have id="home" */}
                 <Tours /> {/* Tours should have id="tours" */}
                 <About /> {/* About should have id="about" */}
