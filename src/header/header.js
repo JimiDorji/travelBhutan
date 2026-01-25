@@ -10,9 +10,8 @@ const NAV_ITEMS = [
     { label: "Home", href: "#home" },
     { label: "Tours", href: "#tours" },
     { label: "About", href: "#about" },
+    { label: "Testimonials", href: "#testimonials" },
     { label: "Contact", href: "#contact" },
-    { label: "Gallery", href: "#gallery" },
-    { label: "Blog", href: "#blog" },
 ];
 
 export default function Header() {
@@ -138,7 +137,7 @@ export default function Header() {
                                 className={`text-sm font-medium ${isScrolled ? "text-blue-700" : "text-white"
                                     }`}
                             >
-                                +975 17 123 456
+                                +975 77652012
                             </span>
                         </div>
 

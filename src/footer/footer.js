@@ -1,212 +1,166 @@
 export default function Footer() {
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear()
 
     return (
-        <footer className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-blue-900 to-slate-900">
-            {/* Background Elements */}
-            <div className="absolute inset-0 pointer-events-none">
-                {/* Gradient Mesh */}
-                <div className="absolute -top-32 left-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-blue-600/10 to-cyan-500/5 blur-3xl" />
-                <div className="absolute -bottom-32 right-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-indigo-600/10 to-purple-500/5 blur-3xl" />
-
-                {/* Pattern Overlay */}
-                <div className="absolute inset-0 opacity-[0.02] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:60px_60px]" />
+        <footer className="relative bg-slate-950 text-slate-300">
+            {/* Subtle background */}
+            <div className="pointer-events-none absolute inset-0">
+                <div className="absolute left-1/4 top-0 h-72 w-72 rounded-full bg-indigo-600/10 blur-3xl" />
+                <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-blue-600/5 blur-3xl" />
             </div>
 
-            <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-                {/* Main Content Grid */}
-                <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-                    {/* Left Column - Brand & Description */}
-                    <div className="space-y-8">
-                        {/* Logo/Brand */}
-                        <div className="inline-flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg" />
-                            <div>
-                                <h2 className="text-2xl font-bold tracking-tight text-white">
-                                    Travel Bhutan
-                                </h2>
-                                <p className="mt-1 text-sm font-medium text-blue-300">
-                                    The Last Himalayan Kingdom
-                                </p>
-                            </div>
+            <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+                {/* Top grid */}
+                <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
+                    {/* Brand */}
+                    <div className="space-y-6">
+                        <div>
+                            <h2 className="text-2xl font-semibold text-white">
+                                Travel Bhutan
+                            </h2>
+                            <p className="mt-1 text-sm text-indigo-300">
+                                Curated journeys through the Himalayan Kingdom
+                            </p>
                         </div>
 
-                        {/* Mission Statement */}
-                        <p className="max-w-md text-lg leading-relaxed text-blue-100/90">
-                            We craft authentic journeys through Bhutan's sacred landscapes,
-                            connecting travelers with profound cultural experiences and
-                            sustainable adventures.
+                        <p className="max-w-md leading-relaxed text-slate-300">
+                            We design responsible and immersive travel experiences in Bhutan,
+                            combining cultural depth, natural beauty, and sustainable tourism
+                            practices approved by the Royal Government of Bhutan.
                         </p>
 
-                        {/* Newsletter Subscription */}
+                        {/* Newsletter */}
                         <div className="max-w-md">
-                            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
-                                Join Our Journey
-                            </h3>
-                            <div className="flex flex-col gap-3 sm:flex-row">
+                            <label className="mb-2 block text-sm font-medium text-slate-200">
+                                Subscribe to updates
+                            </label>
+                            <div className="flex gap-3">
                                 <input
                                     type="email"
-                                    placeholder="Your email address"
-                                    className="flex-1 rounded-xl border border-blue-700/50 bg-blue-900/30 px-4 py-3 text-white placeholder-blue-400/60 backdrop-blur-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                    placeholder="Email address"
+                                    className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                                 />
-                                <button className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl active:scale-95">
+                                <button className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
                                     Subscribe
                                 </button>
                             </div>
-                            <p className="mt-3 text-xs text-blue-300/70">
-                                Receive seasonal insights and exclusive tour updates.
+                            <p className="mt-2 text-xs text-slate-400">
+                                Occasional insights. No spam.
                             </p>
                         </div>
                     </div>
 
-                    {/* Right Column - Links Grid */}
-                    <div className="grid gap-8 sm:grid-cols-3">
-                        {/* Company */}
-                        <div>
-                            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-blue-300">
-                                Company
-                            </h3>
-                            <ul className="space-y-3">
-                                {['About Us', 'Our Story', 'Team', 'Careers', 'Press'].map((item) => (
-                                    <li key={item}>
-                                        <a
-                                            href="#"
-                                            className="group flex items-center gap-2 text-sm text-blue-100 transition-colors hover:text-white"
-                                        >
-                                            <span className="h-1 w-1 rounded-full bg-blue-500/0 transition-all group-hover:bg-blue-400" />
-                                            {item}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Experiences */}
-                        <div>
-                            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-blue-300">
-                                Experiences
-                            </h3>
-                            <ul className="space-y-3">
-                                {['Cultural Tours', 'Trekking', 'Festivals', 'Wellness', 'Custom Journeys'].map((item) => (
-                                    <li key={item}>
-                                        <a
-                                            href="#"
-                                            className="group flex items-center gap-2 text-sm text-blue-100 transition-colors hover:text-white"
-                                        >
-                                            <span className="h-1 w-1 rounded-full bg-blue-500/0 transition-all group-hover:bg-blue-400" />
-                                            {item}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Support */}
-                        <div>
-                            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-blue-300">
-                                Support
-                            </h3>
-                            <ul className="space-y-3">
-                                {['Contact Us', 'FAQ', 'Booking Guide', 'Privacy Policy', 'Terms'].map((item) => (
-                                    <li key={item}>
-                                        <a
-                                            href="#"
-                                            className="group flex items-center gap-2 text-sm text-blue-100 transition-colors hover:text-white"
-                                        >
-                                            <span className="h-1 w-1 rounded-full bg-blue-500/0 transition-all group-hover:bg-blue-400" />
-                                            {item}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                    {/* Links */}
+                    <div className="grid gap-10 sm:grid-cols-3">
+                        {[
+                            {
+                                title: 'Company',
+                                links: ['About', 'Our Story', 'Team', 'Careers', 'Press'],
+                            },
+                            {
+                                title: 'Experiences',
+                                links: ['Cultural Tours', 'Trekking', 'Festivals', 'Wellness', 'Custom Travel'],
+                            },
+                            {
+                                title: 'Support',
+                                links: ['Contact', 'FAQ', 'Booking Guide', 'Privacy Policy', 'Terms'],
+                            },
+                        ].map((section) => (
+                            <div key={section.title}>
+                                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-200">
+                                    {section.title}
+                                </h3>
+                                <ul className="space-y-3 text-sm">
+                                    {section.links.map((item) => (
+                                        <li key={item}>
+                                            <a
+                                                href="#"
+                                                className="transition hover:text-white"
+                                            >
+                                                {item}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
                 {/* Divider */}
-                <div className="my-12 relative">
-                    <div className="h-px bg-gradient-to-r from-transparent via-blue-700/50 to-transparent" />
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-slate-900 p-2">
-                        <div className="h-2 w-2 rounded-full bg-gradient-to-r from-blue-400 to-cyan-300" />
-                    </div>
-                </div>
+                <div className="my-14 h-px bg-slate-800" />
 
-                {/* Bottom Bar */}
-                <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-                    {/* Copyright */}
-                    <div className="text-center md:text-left">
-                        <p className="text-sm text-blue-300/80">
+                {/* Bottom */}
+                <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+                    {/* Legal */}
+                    <div className="text-sm">
+                        <p>
                             © {currentYear} Travel Bhutan. All rights reserved.
                         </p>
-                        <p className="mt-1 text-xs text-blue-400/60">
-                            Registered with Bhutan Tourism Council • GST: BT-2024-001
+                        <p className="mt-1 text-xs text-slate-500">
+                            Licensed tour operator • Department of Tourism, Bhutan
                         </p>
                     </div>
 
-                    {/* Social Links */}
-                    <div className="flex items-center gap-4">
-                        {[
-                            { name: 'Instagram', icon: '📷' },
-                            { name: 'Facebook', icon: '📘' },
-                            { name: 'YouTube', icon: '▶️' },
-                            { name: 'LinkedIn', icon: '💼' },
-                            { name: 'Twitter', icon: '🐦' }
-                        ].map((social) => (
-                            <a
-                                key={social.name}
-                                href="#"
-                                className="group relative rounded-xl bg-blue-900/30 p-3 backdrop-blur-sm transition-all hover:scale-110 hover:bg-blue-800/40"
-                                aria-label={social.name}
-                            >
-                                <span className="text-lg">{social.icon}</span>
-                                <div className="absolute -bottom-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-blue-900 px-2 py-1 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100 group-hover:block">
-                                    {social.name}
-                                </div>
-                            </a>
-                        ))}
+                    {/* Social */}
+                    <div className="flex gap-4">
+                        {['Instagram', 'Facebook', 'YouTube', 'LinkedIn', 'Twitter'].map(
+                            (name) => (
+                                <a
+                                    key={name}
+                                    href="#"
+                                    aria-label={name}
+                                    className="rounded-lg border border-slate-700 px-3 py-2 text-xs transition hover:border-indigo-500 hover:text-white"
+                                >
+                                    {name}
+                                </a>
+                            )
+                        )}
                     </div>
 
-                    {/* Trust Badges */}
-                    <div className="flex items-center gap-4">
-                        <div className="rounded-lg border border-blue-700/30 bg-blue-900/20 px-3 py-2">
-                            <span className="text-xs font-medium text-blue-300">🌱 Sustainable</span>
-                        </div>
-                        <div className="rounded-lg border border-blue-700/30 bg-blue-900/20 px-3 py-2">
-                            <span className="text-xs font-medium text-blue-300">✅ Certified</span>
-                        </div>
+                    {/* Trust */}
+                    <div className="flex gap-3">
+                        <span className="rounded-md border border-slate-700 px-3 py-1.5 text-xs">
+                            Sustainable Tourism
+                        </span>
+                        <span className="rounded-md border border-slate-700 px-3 py-1.5 text-xs">
+                            Government Certified
+                        </span>
                     </div>
                 </div>
 
-                {/* Contact Info */}
-                <div className="mt-12 grid gap-6 rounded-2xl bg-gradient-to-r from-blue-900/30 to-blue-800/20 p-6 backdrop-blur-sm sm:grid-cols-3">
+                {/* Contact */}
+                <div className="mt-12 grid gap-6 rounded-xl border border-slate-800 bg-slate-900 p-6 sm:grid-cols-3 text-sm">
                     <div className="text-center">
-                        <div className="mb-2 text-sm font-medium text-blue-300">Email</div>
-                        <a href="mailto:info@travelbhutan.com" className="text-white hover:text-cyan-300 transition-colors">
-                            info@travelbhutan.com
+                        <div className="mb-1 font-medium text-slate-400">Email</div>
+                        <a
+                            href="mailto:info@travelbhutan.com"
+                            className="text-white hover:text-indigo-300"
+                        >
+                            jigmed774@gmail.com
                         </a>
                     </div>
                     <div className="text-center">
-                        <div className="mb-2 text-sm font-medium text-blue-300">Phone</div>
-                        <a href="tel:+97517123456" className="text-white hover:text-cyan-300 transition-colors">
-                            +975 17 123 456
+                        <div className="mb-1 font-medium text-slate-400">Phone</div>
+                        <a
+                            href="tel:+97517123456"
+                            className="text-white hover:text-indigo-300"
+                        >
+                            +975 77652012
                         </a>
                     </div>
                     <div className="text-center">
-                        <div className="mb-2 text-sm font-medium text-blue-300">Office</div>
-                        <div className="text-white">
-                            Thimphu, Bhutan
-                        </div>
+                        <div className="mb-1 font-medium text-slate-400">Office</div>
+                        <span className="text-white">Thimphu, Bhutan</span>
                     </div>
                 </div>
 
-                {/* Additional Legal */}
-                <div className="mt-8 text-center">
-                    <p className="text-xs text-blue-400/60">
-                        Travel Bhutan is a registered tour operator under the Royal Government of Bhutan's
-                        Department of Tourism. All tours comply with the kingdom's sustainable tourism policies.
-                    </p>
-                </div>
+                {/* Compliance */}
+                <p className="mt-8 text-center text-xs text-slate-500">
+                    All travel operations comply with Bhutan’s Sustainable Tourism Policy
+                    and cultural preservation standards.
+                </p>
             </div>
         </footer>
-    );
+    )
 }

@@ -10,12 +10,28 @@ export default function Mhome() {
     return (
         <>
             <Header />
-            <Hero />
-            <Tours />
-            <About />
-            <Testimonials />
-            <Contact />
+
+            <section id="home">
+                <Hero />
+            </section>
+
+            <section id="tours">
+                <Tours />
+            </section>
+
+            <section id="about">
+                <About />
+            </section>
+
+            <section id="testimonials">
+                <Testimonials />
+            </section>
+
+            <section id="contact">
+                <Contact />
+            </section>
+
             <Footer />
         </>
-    )
+    );
 }
