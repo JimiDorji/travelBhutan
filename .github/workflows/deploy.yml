@@ -28,7 +28,6 @@ jobs:
           NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
         run: |
           npm run build
-          npx next export
 
       - name: Upload build to EC2
         uses: appleboy/scp-action@v0.1.7
