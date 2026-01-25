@@ -191,13 +191,15 @@ export default function Hero() {
 
                         {/* Responsive YouTube Embed */}
                         <div className="relative aspect-video w-full">
-                            <iframe
-                                src="https://www.youtube-nocookie.com/embed/3sDAsVvfiU4?autoplay=1&rel=0"
-                                title="Bhutan Story"
-                                allow="autoplay; encrypted-media"
-                                allowFullScreen
-                                className="absolute inset-0 h-full w-full"
-                            />
+                            <div className="relative w-full aspect-video">
+    <iframe
+        src="https://player.vimeo.com/video/VIMEO_ID?autoplay=1&title=0&byline=0&playsinline=1"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowFullScreen
+        className="absolute inset-0 h-full w-full rounded-2xl"
+    />
+</div>
+
 
                         </div>
                     </div>
