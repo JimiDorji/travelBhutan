@@ -19,6 +19,7 @@ export default function Contact() {
         // Or for specific format: return date.toISOString().split('T')[0];
     };
 
+
     const sendEmail = async (e) => {
         e.preventDefault()
         setLoading(true)
