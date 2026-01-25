@@ -160,9 +160,5 @@ export default function Hero() {
                 ))}
             </div>
         </section>
-    );
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> 232999dc85f76724436ae052037d2baadcd3de6e
+    )
+};
