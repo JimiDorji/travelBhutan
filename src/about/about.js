@@ -36,7 +36,7 @@ export default function About() {
     ];
 
     return (
-        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+        <section id="about" className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
             {/* Background Elements */}
             <div className="absolute inset-0 pointer-events-none">
                 {/* Gradient Orbs */}

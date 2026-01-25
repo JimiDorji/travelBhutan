@@ -43,7 +43,7 @@ export default function Testimonials() {
     ];
 
     return (
-        <section className="relative overflow-hidden bg-[#070b14] py-32">
+        <section id="testimonials" className="relative overflow-hidden bg-[#070b14] py-32">
             {/* Aurora background */}
             <div className="pointer-events-none absolute inset-0">
                 <div className="absolute -top-40 left-1/3 h-[600px] w-[600px] rounded-full bg-cyan-500/10 blur-[120px]" />

@@ -11,25 +11,14 @@ export default function Mhome() {
         <>
             <Header />
 
-            <section id="home">
-                <Hero />
-            </section>
-
-            <section id="tours">
-                <Tours />
-            </section>
-
-            <section id="about">
-                <About />
-            </section>
-
-            <section id="testimonials">
-                <Testimonials />
-            </section>
-
-            <section id="contact">
-                <Contact />
-            </section>
+            {/* Each component should have its own ID */}
+            <main id="home">
+                <Hero /> {/* Hero should have id="home" */}
+                <Tours /> {/* Tours should have id="tours" */}
+                <About /> {/* About should have id="about" */}
+                <Testimonials /> {/* Testimonials should have id="testimonials" */}
+                <Contact /> {/* Contact should have id="contact" */}
+            </main>
 
             <Footer />
         </>
