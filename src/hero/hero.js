@@ -166,43 +166,58 @@ export default function Hero() {
                 ))}
             </div>
             {/* Video Modal */}
-            {isVideoOpen && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-                    role="dialog"
-                    aria-modal="true"
-                >
-                    {/* Close on overlay click */}
-                    <div
-                        className="absolute inset-0"
-                        onClick={() => setIsVideoOpen(false)}
-                    />
 
-                    {/* Video Container */}
-                    <div className="relative z-10 w-full max-w-4xl overflow-hidden rounded-2xl bg-black shadow-2xl">
-                        {/* Close Button */}
-                        <button
-                            onClick={() => setIsVideoOpen(false)}
-                            aria-label="Close video"
-                            className="absolute right-4 top-4 z-20 rounded-full bg-black/70 px-3 py-1 text-sm font-semibold text-white hover:bg-black"
-                        >
-                            ✕
-                        </button>
-
-                        {/* Responsive YouTube Embed */}
-                        <div className="relative z-10 w-full max-w-4xl rounded-2xl bg-black p-4 shadow-2xl">
-    <div className="relative w-full aspect-video overflow-hidden rounded-xl">
-        <iframe
-            src="https://player.vimeo.com/video/VIMEO_ID?autoplay=1&title=0&byline=0&playsinline=1"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
-            className="absolute inset-0 h-full w-full"
+  
+  {isVideoOpen && (
+    <div
+        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm"
+        role="dialog"
+        aria-modal="true"
+    >
+        {/* Overlay */}
+        <div
+            className="absolute inset-0"
+            onClick={() => setIsVideoOpen(false)}
         />
+
+        {/* Modal */}
+        <div
+            className="
+                relative z-10 w-full
+                sm:max-w-4xl
+                rounded-t-3xl sm:rounded-3xl
+                bg-black shadow-2xl
+                p-4 sm:p-6
+                mb-safe
+            "
+        >
+            {/* Close Button */}
+            <button
+                onClick={() => setIsVideoOpen(false)}
+                aria-label="Close video"
+                className="
+                    absolute right-4 top-4 z-20
+                    rounded-full bg-black/70
+                    px-3 py-1 text-sm font-semibold
+                    text-white hover:bg-black
+                "
+            >
+                ✕
+            </button>
+
+            {/* Video */}
+            <div className="relative w-full aspect-video overflow-hidden rounded-2xl">
+                <iframe
+                    src="https://player.vimeo.com/video/VIMEO_ID?autoplay=1&title=0&byline=0&playsinline=1"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 h-full w-full"
+                />
+            </div>
+        </div>
     </div>
-</div>
-                    </div>
-                </div>
-            )}
+)}
+
 
         </section>
     );
