@@ -12,8 +12,6 @@ const BACKGROUNDS = [
 export default function Hero() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const intervalRef = useRef(null);
-    const [isVideoOpen, setIsVideoOpen] = useState(false);
-
 
     const startAutoSlide = useCallback(() => {
         intervalRef.current = setInterval(() => {
@@ -122,13 +120,9 @@ export default function Hero() {
                                 Start Your Journey →
                             </button>
 
-                            <button
-                                onClick={() => setIsVideoOpen(true)}
-                                className="rounded-2xl border border-white/20 bg-white/10 px-10 py-5 text-lg font-semibold text-white backdrop-blur-md transition hover:scale-105 hover:bg-white/20"
-                            >
+                            <button className="rounded-2xl border border-white/20 bg-white/10 px-10 py-5 text-lg font-semibold text-white backdrop-blur-md transition hover:scale-105 hover:bg-white/20">
                                 Watch Story ▶
                             </button>
-
                         </div>
 
                         {/* Stats */}
@@ -165,45 +159,6 @@ export default function Hero() {
                     />
                 ))}
             </div>
-            {/* Video Modal */}
-            {isVideoOpen && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-                    role="dialog"
-                    aria-modal="true"
-                >
-                    {/* Close on overlay click */}
-                    <div
-                        className="absolute inset-0"
-                        onClick={() => setIsVideoOpen(false)}
-                    />
-
-                    {/* Video Container */}
-                    <div className="relative z-10 w-full max-w-4xl overflow-hidden rounded-2xl bg-black shadow-2xl">
-                        {/* Close Button */}
-                        <button
-                            onClick={() => setIsVideoOpen(false)}
-                            aria-label="Close video"
-                            className="absolute right-4 top-4 z-20 rounded-full bg-black/70 px-3 py-1 text-sm font-semibold text-white hover:bg-black"
-                        >
-                            ✕
-                        </button>
-
-                        {/* Responsive YouTube Embed */}
-                        <div className="relative aspect-video w-full">
-                            <iframe
-                                src="https://www.youtube-nocookie.com/embed/3sDAsVvfiU4?autoplay=1&rel=0"
-                                title="Bhutan Story"
-                                allow="autoplay; encrypted-media"
-                                allowFullScreen
-                                className="absolute inset-0 h-full w-full"
-                            />
-
-                        </div>
-                    </div>
-                </div>
-            )}
-
         </section>
     );
-}
+} 
