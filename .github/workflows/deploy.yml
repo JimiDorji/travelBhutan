@@ -19,15 +19,16 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build static site
+      - name: Build & export static site
         env:
           NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}
           NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID }}
           NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
         run: |
           npm run build
+          npx next export
 
       - name: Upload build to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -39,11 +40,16 @@ jobs:
           target: "/home/deploy/releases"
           rm: true
 
-      - name: Reload Nginx
+      - name: Activate release
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            sudo rm -rf /var/www/travelbhutan/*
+            sudo cp -r /home/deploy/releases/* /var/www/travelbhutan/
+            sudo chown -R nginx:nginx /var/www/travelbhutan
+            sudo chmod -R 755 /var/www/travelbhutan
+            sudo chcon -R -t httpd_sys_content_t /var/www/travelbhutan || true
             sudo systemctl reload nginx
