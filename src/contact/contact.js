@@ -1,47 +1,61 @@
+import { useRef, useState } from 'react'
+import emailjs from '@emailjs/browser'
+
 export default function Contact() {
+    const formRef = useRef(null)
+    const [loading, setLoading] = useState(false)
+    const [status, setStatus] = useState(null)
+
+    const sendEmail = async (e) => {
+        e.preventDefault()
+        setLoading(true)
+        setStatus(null)
+
+        try {
+            await emailjs.sendForm(
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+                formRef.current,
+                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+            )
+
+            setStatus('success')
+            formRef.current.reset()
+        } catch (error) {
+            console.error('EmailJS error:', error)
+            setStatus('error')
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
         <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-32">
-            {/* Background Elements */}
+            {/* Background */}
             <div className="absolute inset-0 pointer-events-none">
-                {/* Gradient Mesh */}
                 <div className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-blue-600/20 via-cyan-500/10 to-transparent blur-3xl" />
                 <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-indigo-600/20 via-purple-500/10 to-transparent blur-3xl" />
-
-                {/* Mountain Silhouette */}
-                <svg className="absolute bottom-0 left-0 right-0 w-full opacity-10" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 120L120 60C240 0 360 0 480 30C600 60 720 90 840 90C960 90 1080 60 1200 30C1320 0 1440 0 1440 0V120H0Z" fill="white" />
-                </svg>
             </div>
 
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                {/* Enhanced Header */}
+                {/* Header */}
                 <div className="mx-auto mb-20 max-w-4xl text-center">
-                    <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-white/10 to-white/5 px-4 py-2 backdrop-blur-md">
-                        <div className="h-2 w-2 animate-pulse rounded-full bg-cyan-400" />
-                        <span className="text-sm font-medium tracking-wider text-cyan-100">
-                            PERSONALIZED GUIDANCE
-                        </span>
-                    </div>
-
-                    <h2 className="mb-6 bg-gradient-to-b from-white via-white/95 to-white/80 bg-clip-text text-5xl font-bold tracking-tight text-transparent sm:text-6xl lg:text-7xl">
+                    <h2 className="mb-6 bg-gradient-to-b from-white via-white/95 to-white/80 bg-clip-text text-5xl font-bold text-transparent">
                         Start Your Journey
                     </h2>
-
-                    <p className="mx-auto max-w-2xl text-xl leading-relaxed text-blue-100/80">
-                        Connect with our Bhutan travel specialists for bespoke itineraries,
-                        cultural insights, and seamless planning for your Himalayan adventure.
+                    <p className="mx-auto max-w-2xl text-xl text-blue-100/80">
+                        Connect with our Bhutan travel specialists for bespoke itineraries.
                     </p>
                 </div>
 
-                {/* Content Grid */}
                 <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-                    {/* Contact Form Card */}
+                    {/* FORM */}
                     <div className="relative">
-                        {/* Form Card Glow */}
-                        <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-r from-blue-500/20 via-cyan-500/10 to-indigo-500/20 blur opacity-0 transition-opacity duration-500 hover:opacity-100" />
-
-                        <form className="relative rounded-3xl bg-gradient-to-b from-white/95 to-white/90 p-10 shadow-2xl backdrop-blur-md">
-                            {/* Form Header */}
+                        <form
+                            ref={formRef}
+                            onSubmit={sendEmail}
+                            className="relative rounded-3xl bg-gradient-to-b from-white/95 to-white/90 p-10 shadow-2xl backdrop-blur-md"
+                        >
                             <div className="mb-8 text-center">
                                 <h3 className="text-2xl font-bold text-gray-900">
                                     Send Inquiry
@@ -51,100 +65,90 @@ export default function Contact() {
                                 </p>
                             </div>
 
+                            {/* Names */}
                             <div className="grid gap-6 sm:grid-cols-2">
-                                <div>
-                                    <label className="mb-2 block text-sm font-semibold text-gray-800">
-                                        First Name *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="John"
-                                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder-gray-400 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="mb-2 block text-sm font-semibold text-gray-800">
-                                        Last Name *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="Doe"
-                                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder-gray-400 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
-                                    />
-                                </div>
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    required
+                                    placeholder="First Name *"
+                                    className="w-full rounded-xl border px-4 py-3.5"
+                                />
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    required
+                                    placeholder="Last Name *"
+                                    className="w-full rounded-xl border px-4 py-3.5"
+                                />
                             </div>
 
+                            {/* Email */}
                             <div className="mt-6">
-                                <label className="mb-2 block text-sm font-semibold text-gray-800">
-                                    Email Address *
-                                </label>
                                 <input
                                     type="email"
+                                    name="email"
                                     required
-                                    placeholder="you@example.com"
-                                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder-gray-400 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                                    placeholder="Email Address *"
+                                    className="w-full rounded-xl border px-4 py-3.5"
                                 />
                             </div>
 
+                            {/* Phone */}
                             <div className="mt-6">
-                                <label className="mb-2 block text-sm font-semibold text-gray-800">
-                                    Phone Number
-                                </label>
                                 <input
                                     type="tel"
-                                    placeholder="+1 (555) 000-0000"
-                                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder-gray-400 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                                    name="phone"
+                                    placeholder="Phone Number"
+                                    className="w-full rounded-xl border px-4 py-3.5"
                                 />
                             </div>
 
-                            <div className="mt-6">
-                                <label className="mb-2 block text-sm font-semibold text-gray-800">
-                                    Travel Dates
-                                </label>
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <input
-                                        type="date"
-                                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
-                                    />
-                                    <input
-                                        type="date"
-                                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
-                                    />
-                                </div>
+                            {/* Dates */}
+                            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                                <input
+                                    type="date"
+                                    name="start_date"
+                                    className="w-full rounded-xl border px-4 py-3.5"
+                                />
+                                <input
+                                    type="date"
+                                    name="end_date"
+                                    className="w-full rounded-xl border px-4 py-3.5"
+                                />
                             </div>
 
+                            {/* Message */}
                             <div className="mt-6">
-                                <label className="mb-2 block text-sm font-semibold text-gray-800">
-                                    Your Message *
-                                </label>
                                 <textarea
                                     rows={4}
+                                    name="message"
                                     required
-                                    placeholder="Share your travel interests, group size, and any specific requests..."
-                                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder-gray-400 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                                    placeholder="Your message..."
+                                    className="w-full rounded-xl border px-4 py-3.5"
                                 />
                             </div>
 
-                            {/* Submit Button */}
+                            {/* Submit */}
                             <button
                                 type="submit"
-                                className="group relative mt-10 w-full overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-4 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+                                disabled={loading}
+                                className="mt-8 w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-4 text-white font-semibold"
                             >
-                                <span className="relative z-10 flex items-center justify-center gap-2">
-                                    Send Inquiry
-                                    <svg className="h-4 w-4 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-white/20 to-cyan-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-hover:animate-shimmer" />
+                                {loading ? 'Sending…' : 'Send Inquiry'}
                             </button>
 
-                            <p className="mt-4 text-center text-xs text-gray-500">
-                                By submitting, you agree to our privacy policy
-                            </p>
+                            {/* Status */}
+                            {status === 'success' && (
+                                <p className="mt-4 text-center text-sm text-green-600">
+                                    ✅ Inquiry sent successfully.
+                                </p>
+                            )}
+                            {status === 'error' && (
+                                <p className="mt-4 text-center text-sm text-red-600">
+                                    ❌ Failed to send. Please try again.
+                                </p>
+                            )}
                         </form>
                     </div>
 
