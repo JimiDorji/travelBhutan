@@ -14,18 +14,34 @@ export default function Contact() {
         setStatus(null)
 
         try {
-            await emailjs.sendForm(
+            console.log('Form data:', {
+                first_name: formRef.current.first_name.value,
+                last_name: formRef.current.last_name.value,
+                email: formRef.current.email.value,
+                message: formRef.current.message.value
+            })
+
+            const result = await emailjs.sendForm(
                 process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
                 process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
                 formRef.current,
                 process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
             )
 
+            console.log('EmailJS success:', result.text)
             setStatus('success')
             formRef.current.reset()
+
         } catch (error) {
-            console.error('EmailJS error:', error)
-            setStatus('error')
+            console.error('EmailJS full error:', error)
+            console.error('Error status:', error.status)
+            console.error('Error text:', error.text)
+
+            if (error.text) {
+                setStatus(`error: ${error.text}`)
+            } else {
+                setStatus('error')
+            }
         } finally {
             setLoading(false)
         }
@@ -130,6 +146,12 @@ export default function Contact() {
                                     className="w-full rounded-xl border px-4 py-3.5"
                                 />
                             </div>
+                            {/* time */}
+                            <input
+                                type="hidden"
+                                name="time"
+                                value={new Date().toLocaleString()}
+                            />
 
                             {/* Submit */}
                             <button
