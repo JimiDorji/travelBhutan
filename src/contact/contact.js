@@ -136,17 +136,37 @@ export default function Contact() {
 
                             {/* Dates */}
                             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                                <input
-                                    type="date"
-                                    name="start_date"
-                                    className="w-full rounded-xl border px-4 py-3.5"
-                                />
-                                <input
-                                    type="date"
-                                    name="end_date"
-                                    className="w-full rounded-xl border px-4 py-3.5"
-                                />
+                                <div className="relative">
+                                    <input
+                                        id="start_date"
+                                        type="date"
+                                        name="start_date"
+                                        className="peer w-full rounded-xl border px-4 pt-6 pb-2"
+                                    />
+                                    <label
+                                        htmlFor="start_date"
+                                        className="absolute left-4 top-2 text-xs text-gray-500 peer-focus:text-blue-500"
+                                    >
+                                        Start Date
+                                    </label>
+                                </div>
+
+                                <div className="relative">
+                                    <input
+                                        id="end_date"
+                                        type="date"
+                                        name="end_date"
+                                        className="peer w-full rounded-xl border px-4 pt-6 pb-2"
+                                    />
+                                    <label
+                                        htmlFor="end_date"
+                                        className="absolute left-4 top-2 text-xs text-gray-500 peer-focus:text-blue-500"
+                                    >
+                                        End Date
+                                    </label>
+                                </div>
                             </div>
+
 
                             {/* Message */}
                             <div className="mt-6">

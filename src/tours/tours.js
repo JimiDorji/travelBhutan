@@ -123,40 +123,48 @@ export default function Tours() {
     }, [activeCategory]);
 
     return (
-        <section id="tours" className="relative overflow-hidden bg-[#070b14] py-32">
-            {/* Aurora Background */}
-            <div className="pointer-events-none absolute inset-0">
+        <section
+            id="tours"
+            className="relative overflow-hidden bg-[#070b14] py-32"
+        >
+            {/* Aurora Background (soft motion) */}
+            <div className="pointer-events-none absolute inset-0 animate-float">
                 <div className="absolute -top-40 left-1/3 h-[600px] w-[600px] rounded-full bg-cyan-500/10 blur-[120px]" />
                 <div className="absolute bottom-0 right-1/4 h-[500px] w-[500px] rounded-full bg-indigo-500/10 blur-[120px]" />
             </div>
 
             <div className="relative mx-auto max-w-7xl px-6">
                 {/* Header */}
-                <header className="mx-auto mb-24 max-w-3xl text-center">
+                <header className="mx-auto mb-24 max-w-3xl text-center animate-slide-down">
                     <span className="mb-6 inline-block rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs tracking-widest text-cyan-200 backdrop-blur">
                         CURATED JOURNEYS
                     </span>
 
-                    <h2 className="mt-6 text-5xl font-semibold tracking-tight text-white sm:text-6xl">
+                    <h2 className="mt-6 text-5xl font-semibold tracking-tight text-white sm:text-6xl animate-slide-up-fade">
                         Explore Bhutan
                     </h2>
 
-                    <p className="mt-6 text-lg leading-relaxed text-slate-300">
+                    <p
+                        className="mt-6 text-lg leading-relaxed text-slate-300 animate-fade-in"
+                        style={{ animationDelay: "150ms" }}
+                    >
                         Thoughtfully designed journeys shaped by culture, nature,
                         spirituality, and time.
                     </p>
                 </header>
 
-                {/* Filters */}
+                {/* Filters (animated stagger) */}
                 <div className="mb-16 flex flex-wrap justify-center gap-3">
-                    {CATEGORIES.map(({ id, label }) => (
+                    {CATEGORIES.map(({ id, label }, i) => (
                         <button
                             key={id}
                             onClick={() => setActiveCategory(id)}
-                            className={`rounded-full px-6 py-3 text-sm font-medium transition-all ${activeCategory === id
-                                ? "bg-white text-slate-900 shadow-lg"
-                                : "bg-white/5 text-slate-300 hover:bg-white/10"
+                            className={`rounded-full px-6 py-3 text-sm font-medium transition-all 
+                animate-pop-in ${activeCategory === id
+                                    ? "bg-white text-slate-900 shadow-lg"
+                                    : "bg-white/5 text-slate-300 hover:bg-white/10"
                                 }`}
+                            style={{ animationDelay: `${i * 80}ms` }}
                         >
                             {label}
                         </button>
@@ -165,10 +173,14 @@ export default function Tours() {
 
                 {/* Tours Grid */}
                 <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-                    {filteredTours.map((tour) => (
+                    {filteredTours.map((tour, i) => (
                         <article
                             key={tour.title}
-                            className="group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/10"
+                            className="group relative rounded-3xl border border-white/10 bg-white/5 
+              backdrop-blur-xl transition-all duration-500 
+              hover:-translate-y-2 hover:bg-white/10
+              animate-slide-up-fade"
+                            style={{ animationDelay: `${150 + i * 120}ms` }}
                         >
                             {/* Image */}
                             <div className="relative h-64 overflow-hidden rounded-t-3xl">
@@ -215,10 +227,10 @@ export default function Tours() {
                                     </div>
                                 </div>
 
-                                {/* CTA */}
-                                <button className="inline-flex items-center gap-2 text-sm font-medium text-cyan-300 transition hover:text-cyan-200">
+                                {/* CTA (animated hover) */}
+                                <button className="inline-flex items-center gap-2 text-sm font-medium text-cyan-300 transition hover:text-cyan-200 group-hover:translate-x-1">
                                     View Journey
-                                    <ChevronRight className="h-4 w-4" />
+                                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                                 </button>
                             </div>
                         </article>

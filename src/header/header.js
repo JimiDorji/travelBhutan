@@ -18,58 +18,49 @@ export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState("home");
 
-    // Smooth scroll to section
     const scrollToSection = useCallback((e, href) => {
         e.preventDefault();
-        const id = href.replace('#', '');
+        const id = href.replace("#", "");
         const element = document.getElementById(id);
 
-        if (element) {
-            // Close mobile menu if open
-            setIsOpen(false);
+        if (!element) return;
 
-            // Calculate header height for offset
-            const headerHeight = isScrolled ? 80 : 100;
+        setIsOpen(false);
 
-            // Get element position
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+        const headerHeight = isScrolled ? 72 : 88;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
 
-            // Smooth scroll
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+        });
 
-            // Update active section
-            setActiveSection(id);
-        }
+        setActiveSection(id);
     }, [isScrolled]);
 
-    // Handle scroll detection
     const handleScroll = useCallback(() => {
         const scrollY = window.scrollY;
         setIsScrolled(scrollY > 20);
 
-        // Find which section is currently in view
+        const headerHeight = scrollY > 20 ? 72 : 88;
+
         for (const item of NAV_ITEMS) {
             const id = item.href.slice(1);
             const el = document.getElementById(id);
             if (!el) continue;
 
             const rect = el.getBoundingClientRect();
-            const headerHeight = isScrolled ? 80 : 100;
 
-            // Check if element is in viewport (with header offset)
             if (
-                rect.top <= headerHeight + 50 &&
-                rect.bottom >= headerHeight + 50
+                rect.top <= headerHeight + 60 &&
+                rect.bottom >= headerHeight + 60
             ) {
                 setActiveSection(id);
                 break;
             }
         }
-    }, [isScrolled]);
+    }, []);
 
     useEffect(() => {
         handleScroll();
@@ -77,28 +68,18 @@ export default function Header() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [handleScroll]);
 
-    // Close mobile menu when clicking outside
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (isOpen && !e.target.closest('header')) {
+            if (isOpen && !e.target.closest("header")) {
                 setIsOpen(false);
             }
         };
-        document.addEventListener('click', handleClickOutside);
-        return () => document.removeEventListener('click', handleClickOutside);
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
     }, [isOpen]);
 
-    // Debug: Log which sections are found
-    useEffect(() => {
-        console.log("Looking for sections:");
-        NAV_ITEMS.forEach(item => {
-            const id = item.href.slice(1);
-            const el = document.getElementById(id);
-            console.log(`${id}: ${el ? '✅ Found' : '❌ Not found'}`);
-        });
-    }, []);
-
-    const linkBase = "relative px-1 py-2 text-sm font-medium transition-colors";
+    const linkBase =
+        "relative px-1 py-2 text-sm font-medium transition-colors after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:scale-x-0 after:transition-transform hover:after:scale-x-100";
 
     return (
         <header
@@ -108,14 +89,15 @@ export default function Header() {
                 }`}
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between sm:h-20">
-                    {/* Logo */}
+                <div className="flex h-16 items-center justify-between sm:h-20 transition-all">
+
+                    {/* LOGO */}
                     <a
                         href="#home"
-                        onClick={(e) => scrollToSection(e, '#home')}
+                        onClick={(e) => scrollToSection(e, "#home")}
                         className="group flex items-center gap-3"
                     >
-                        <div className="group relative h-9 w-9 rounded-lg shadow-md backdrop-blur-sm overflow-hidden flex items-center justify-center sm:h-10 sm:w-10">
+                        <div className="relative h-9 w-9 rounded-xl backdrop-blur-md border border-white/20 shadow-md overflow-hidden flex items-center justify-center sm:h-10 sm:w-10">
                             <Image
                                 src={logo}
                                 alt="TravelBhutan Logo"
@@ -142,7 +124,7 @@ export default function Header() {
                         </div>
                     </a>
 
-                    {/* Desktop Nav */}
+                    {/* DESKTOP NAV */}
                     <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
                         {NAV_ITEMS.map(({ label, href }) => {
                             const id = href.slice(1);
@@ -154,8 +136,8 @@ export default function Header() {
                                     href={href}
                                     onClick={(e) => scrollToSection(e, href)}
                                     className={`${linkBase} ${isScrolled
-                                        ? "text-slate-700 hover:text-blue-600"
-                                        : "text-white/90 hover:text-white"
+                                        ? "text-slate-700 hover:text-blue-600 after:bg-gradient-to-r after:from-blue-600 after:to-cyan-500"
+                                        : "text-white/90 hover:text-white after:bg-white"
                                         } ${active ? "font-semibold" : ""} text-sm xl:text-base`}
                                 >
                                     {label}
@@ -172,7 +154,7 @@ export default function Header() {
                         })}
                     </nav>
 
-                    {/* Desktop Actions */}
+                    {/* DESKTOP ACTIONS */}
                     <div className="hidden lg:flex items-center gap-4 xl:gap-6">
                         <button
                             aria-label="Search"
@@ -186,7 +168,7 @@ export default function Header() {
                         </button>
 
                         <div
-                            className={`hidden xl:flex items-center gap-2 rounded-xl px-4 py-2 ${isScrolled ? "bg-blue-50" : "bg-white/10"
+                            className={`hidden xl:flex items-center gap-2 rounded-xl px-4 py-2 backdrop-blur-md ${isScrolled ? "bg-blue-50" : "bg-white/10"
                                 }`}
                         >
                             <Phone
@@ -202,14 +184,14 @@ export default function Header() {
                         </div>
 
                         <button
-                            onClick={(e) => scrollToSection(e, '#contact')}
+                            onClick={(e) => scrollToSection(e, "#contact")}
                             className="relative overflow-hidden rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:scale-105 active:scale-95 xl:px-6 xl:py-3"
                         >
                             Book Now →
                         </button>
                     </div>
 
-                    {/* Mobile Actions */}
+                    {/* MOBILE ACTIONS */}
                     <div className="flex items-center gap-3 lg:hidden">
                         <button
                             aria-label="Search"
@@ -225,12 +207,16 @@ export default function Header() {
                             className={`rounded-xl p-2 ${isScrolled ? "text-slate-700" : "text-white"
                                 }`}
                         >
-                            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                            {isOpen ? (
+                                <X className="h-6 w-6" />
+                            ) : (
+                                <Menu className="h-6 w-6" />
+                            )}
                         </button>
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
+                {/* MOBILE MENU */}
                 <div
                     className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${isOpen
                         ? "max-h-[500px] opacity-100 visible"
@@ -267,19 +253,27 @@ export default function Header() {
                             })}
                         </nav>
 
-                        {/* Mobile Contact Info */}
+                        {/* MOBILE CONTACT */}
                         <div className="mt-6 px-4 space-y-4">
-                            <div className={`flex items-center gap-3 rounded-xl px-4 py-3 ${isScrolled ? "bg-blue-50" : "bg-white/10"
-                                }`}>
-                                <Phone className={`h-5 w-5 ${isScrolled ? "text-blue-600" : "text-white"}`} />
-                                <span className={`font-medium ${isScrolled ? "text-blue-700" : "text-white"}`}>
+                            <div
+                                className={`flex items-center gap-3 rounded-xl px-4 py-3 ${isScrolled ? "bg-blue-50" : "bg-white/10"
+                                    }`}
+                            >
+                                <Phone
+                                    className={`h-5 w-5 ${isScrolled ? "text-blue-600" : "text-white"
+                                        }`}
+                                />
+                                <span
+                                    className={`font-medium ${isScrolled ? "text-blue-700" : "text-white"
+                                        }`}
+                                >
                                     +975 77652012
                                 </span>
                             </div>
 
                             <button
                                 onClick={(e) => {
-                                    scrollToSection(e, '#contact');
+                                    scrollToSection(e, "#contact");
                                     setIsOpen(false);
                                 }}
                                 className="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg transition active:scale-95"
