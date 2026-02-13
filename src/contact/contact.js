@@ -1,323 +1,244 @@
-'use client';
+"use client";
 
-import { useRef, useState } from 'react'
-import emailjs from '@emailjs/browser'
+import { useRef, useState, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 
 export default function Contact() {
-    const formRef = useRef(null)
-    const [loading, setLoading] = useState(false)
-    const [status, setStatus] = useState(null)
+    const formRef = useRef(null);
+    const sectionRef = useRef(null);
 
-    const formatDate = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        });
-        // Or for specific format: return date.toISOString().split('T')[0];
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState(null);
+    const [focusedField, setFocusedField] = useState(null);
+    const [particles, setParticles] = useState([]);
+
+    /* Hydration-safe particles */
+    useEffect(() => {
+        const generated = Array.from({ length: 14 }).map((_, i) => ({
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            delay: `${i * 0.3}s`,
+            duration: `${4 + Math.random() * 4}s`,
+        }));
+        setParticles(generated);
+    }, []);
+
+    /* Scoped intersection observer */
+    useEffect(() => {
+        if (!sectionRef.current) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) entry.target.classList.add("in-view");
+                });
+            },
+            { threshold: 0.1 }
+        );
+
+        sectionRef.current
+            .querySelectorAll(".animate-on-scroll")
+            .forEach((el) => observer.observe(el));
+
+        return () => observer.disconnect();
+    }, []);
+
+    const formatDate = (value) => {
+        if (!value) return "";
+        const date = new Date(value);
+        return date.toLocaleDateString("en-US");
     };
 
-
     const sendEmail = async (e) => {
-        e.preventDefault()
-        setLoading(true)
-        setStatus(null)
+        e.preventDefault();
+        if (!formRef.current) return;
+
+        setLoading(true);
+        setStatus(null);
 
         try {
-            // Create form data manually to control values
             const formData = new FormData(formRef.current);
             const data = {
-                first_name: formData.get('first_name'),
-                last_name: formData.get('last_name'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                start_date: formatDate(formData.get('start_date')),
-                end_date: formatDate(formData.get('end_date')),
-                message: formData.get('message'),
+                first_name: formData.get("first_name"),
+                last_name: formData.get("last_name"),
+                email: formData.get("email"),
+                phone: formData.get("phone"),
+                start_date: formatDate(formData.get("start_date")),
+                end_date: formatDate(formData.get("end_date")),
+                message: formData.get("message"),
                 time: new Date().toLocaleString(),
-                name: `${formData.get('first_name')} ${formData.get('last_name')}`
+                name: `${formData.get("first_name")} ${formData.get("last_name")}`,
             };
-
-            console.log('Sending data:', data);
 
             await emailjs.send(
                 process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
                 process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
                 data,
                 process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
-            )
+            );
 
-            setStatus('success')
-            formRef.current.reset()
-        } catch (error) {
-            console.error('EmailJS error:', error)
-            setStatus('error')
+            setStatus("success");
+            formRef.current.reset();
+            setTimeout(() => setStatus(null), 5000);
+        } catch (err) {
+            console.error(err);
+            setStatus("error");
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     return (
-        <section id="contact" className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-32">
-            {/* Background */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-blue-600/20 via-cyan-500/10 to-transparent blur-3xl" />
-                <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-indigo-600/20 via-purple-500/10 to-transparent blur-3xl" />
+        <section
+            ref={sectionRef}
+            id="contact"
+            className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 py-32"
+        >
+            {/* Background Particles */}
+            <div className="pointer-events-none absolute inset-0">
+                {particles.map((p, i) => (
+                    <div
+                        key={i}
+                        className="absolute h-1.5 w-1.5 rounded-full bg-cyan-400/30 animate-float"
+                        style={{
+                            top: p.top,
+                            left: p.left,
+                            animationDelay: p.delay,
+                            animationDuration: p.duration,
+                        }}
+                    />
+                ))}
             </div>
 
-            <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="relative mx-auto max-w-7xl px-6">
                 {/* Header */}
-                <div className="mx-auto mb-20 max-w-4xl text-center">
-                    <h2 className="mb-6 bg-gradient-to-b from-white via-white/95 to-white/80 bg-clip-text text-5xl font-bold text-transparent">
-                        Start Your Journey
+                <header className="mx-auto mb-20 max-w-4xl text-center">
+                    <span className="inline-block rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs tracking-widest text-cyan-200 backdrop-blur">
+                        GET IN TOUCH
+                    </span>
+
+                    <h2 className="mt-6 text-5xl font-bold tracking-tight text-white sm:text-6xl">
+                        Start Your Himalayan Journey
                     </h2>
-                    <p className="mx-auto max-w-2xl text-xl text-blue-100/80">
-                        Connect with our Bhutan travel specialists for bespoke itineraries.
+
+                    <p className="mt-6 text-lg text-slate-300 max-w-2xl mx-auto">
+                        Connect with our Bhutan travel specialists for bespoke itineraries
+                        and personalized service tailored to your interests.
                     </p>
-                </div>
+                </header>
 
-                <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
+                <div className="grid gap-16 lg:grid-cols-2">
                     {/* FORM */}
-                    <div className="relative">
-                        <form
-                            ref={formRef}
-                            onSubmit={sendEmail}
-                            className="relative rounded-3xl bg-gradient-to-b from-white/95 to-white/90 p-10 shadow-2xl backdrop-blur-md"
-                        >
-                            <div className="mb-8 text-center">
-                                <h3 className="text-2xl font-bold text-gray-900">
-                                    Send Inquiry
-                                </h3>
-                                <p className="mt-2 text-gray-600">
-                                    Typically respond within 4 business hours
-                                </p>
-                            </div>
+                    <form
+                        ref={formRef}
+                        onSubmit={sendEmail}
+                        className="rounded-3xl bg-gradient-to-b from-white/95 to-white/90 p-10 shadow-2xl backdrop-blur-xl"
+                    >
+                        <h3 className="mb-6 text-2xl font-bold text-slate-900">
+                            Send Inquiry
+                        </h3>
 
-                            {/* Names */}
-                            <div className="grid gap-6 sm:grid-cols-2">
-                                <input
-                                    type="text"
-                                    name="first_name"
-                                    required
-                                    placeholder="First Name *"
-                                    className="w-full rounded-xl border px-4 py-3.5"
-                                />
-                                <input
-                                    type="text"
-                                    name="last_name"
-                                    required
-                                    placeholder="Last Name *"
-                                    className="w-full rounded-xl border px-4 py-3.5"
-                                />
-                            </div>
-
-                            {/* Email */}
-                            <div className="mt-6">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    required
-                                    placeholder="Email Address *"
-                                    className="w-full rounded-xl border px-4 py-3.5"
-                                />
-                            </div>
-
-                            {/* Phone */}
-                            <div className="mt-6">
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    placeholder="Phone Number"
-                                    className="w-full rounded-xl border px-4 py-3.5"
-                                />
-                            </div>
-
-                            {/* Dates */}
-                            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                                <div className="relative">
-                                    <input
-                                        id="start_date"
-                                        type="date"
-                                        name="start_date"
-                                        className="peer w-full rounded-xl border px-4 pt-6 pb-2"
-                                    />
-                                    <label
-                                        htmlFor="start_date"
-                                        className="absolute left-4 top-2 text-xs text-gray-500 peer-focus:text-blue-500"
-                                    >
-                                        Start Date
-                                    </label>
-                                </div>
-
-                                <div className="relative">
-                                    <input
-                                        id="end_date"
-                                        type="date"
-                                        name="end_date"
-                                        className="peer w-full rounded-xl border px-4 pt-6 pb-2"
-                                    />
-                                    <label
-                                        htmlFor="end_date"
-                                        className="absolute left-4 top-2 text-xs text-gray-500 peer-focus:text-blue-500"
-                                    >
-                                        End Date
-                                    </label>
-                                </div>
-                            </div>
-
-
-                            {/* Message */}
-                            <div className="mt-6">
-                                <textarea
-                                    rows={4}
-                                    name="message"
-                                    required
-                                    placeholder="Your message..."
-                                    className="w-full rounded-xl border px-4 py-3.5"
-                                />
-                            </div>
-                            {/* time */}
+                        <div className="grid gap-4 sm:grid-cols-2">
                             <input
-                                type="hidden"
-                                name="time"
-                                value={new Date().toLocaleString()}
+                                type="text"
+                                name="first_name"
+                                required
+                                placeholder="First Name *"
+                                className="w-full rounded-xl border border-gray-200 px-4 py-3.5 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-400/20 outline-none"
                             />
+                            <input
+                                type="text"
+                                name="last_name"
+                                required
+                                placeholder="Last Name *"
+                                className="w-full rounded-xl border border-gray-200 px-4 py-3.5 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-400/20 outline-none"
+                            />
+                        </div>
 
-                            {/* Submit */}
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="mt-8 w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-4 text-white font-semibold"
-                            >
-                                {loading ? 'Sending…' : 'Send Inquiry'}
-                            </button>
+                        <input
+                            type="email"
+                            name="email"
+                            required
+                            placeholder="Email Address *"
+                            className="mt-4 w-full rounded-xl border border-gray-200 px-4 py-3.5 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-400/20 outline-none"
+                        />
 
-                            {/* Status */}
-                            {status === 'success' && (
-                                <p className="mt-4 text-center text-sm text-green-600">
-                                    ✅ Inquiry sent successfully.
-                                </p>
-                            )}
-                            {status === 'error' && (
-                                <p className="mt-4 text-center text-sm text-red-600">
-                                    ❌ Failed to send. Please try again.
-                                </p>
-                            )}
-                        </form>
-                    </div>
+                        <input
+                            type="tel"
+                            name="phone"
+                            placeholder="Phone Number (Optional)"
+                            className="mt-4 w-full rounded-xl border border-gray-200 px-4 py-3.5 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-400/20 outline-none"
+                        />
 
-                    {/* Contact Information & Map */}
+                        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                            <input
+                                type="date"
+                                name="start_date"
+                                className="rounded-xl border border-gray-200 px-4 py-3 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-400/20 outline-none"
+                            />
+                            <input
+                                type="date"
+                                name="end_date"
+                                className="rounded-xl border border-gray-200 px-4 py-3 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-400/20 outline-none"
+                            />
+                        </div>
+
+                        <textarea
+                            rows={4}
+                            name="message"
+                            required
+                            placeholder="Tell us about your dream journey..."
+                            className="mt-4 w-full rounded-xl border border-gray-200 px-4 py-3.5 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-400/20 outline-none resize-none"
+                        />
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="group mt-8 w-full rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 px-8 py-4 font-semibold text-white transition hover:scale-[1.02] hover:shadow-xl disabled:opacity-50"
+                        >
+                            {loading ? "Sending..." : "Send Inquiry →"}
+                        </button>
+
+                        {status === "success" && (
+                            <p className="mt-4 text-center text-emerald-600 font-medium">
+                                Inquiry sent successfully. We will reply shortly.
+                            </p>
+                        )}
+
+                        {status === "error" && (
+                            <p className="mt-4 text-center text-red-500 font-medium">
+                                Failed to send. Please try again.
+                            </p>
+                        )}
+                    </form>
+
+                    {/* CONTACT INFO */}
                     <div className="space-y-8">
-                        {/* Interactive Map */}
-                        <div className="group relative overflow-hidden rounded-3xl shadow-2xl transition-all duration-500 hover:shadow-3xl">
-                            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-indigo-600/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                            <div className="relative z-10 overflow-hidden rounded-3xl">
-                                <div className="absolute top-6 left-6 z-20 rounded-xl bg-white/90 px-4 py-2 backdrop-blur-sm">
-                                    <div className="flex items-center gap-2">
-                                        <div className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-                                        <span className="text-sm font-semibold text-gray-900">Our Headquarters</span>
-                                    </div>
-                                </div>
-                                <iframe
-                                    title="Travel Bhutan Headquarters"
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113481.5291374787!2d89.60089467499865!3d27.471197800000015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e1941926a060cd%3A0x5f9c0b4e9a4a5b6c!2sThimphu%2C%20Bhutan!5e0!3m2!1sen!2s!4v1647782345678!5m2!1sen!2s"
-                                    className="h-80 w-full border-0 transition-transform duration-500 group-hover:scale-105"
-                                    loading="lazy"
-                                />
-                            </div>
+                        <div className="rounded-3xl bg-white/5 p-8 backdrop-blur-xl border border-white/10">
+                            <h4 className="text-xl font-semibold text-white mb-4">
+                                Contact Information
+                            </h4>
+
+                            <ul className="space-y-4 text-slate-300 text-sm">
+                                <li>📍 Olakha, Thimphu, Bhutan</li>
+                                <li>✉️ alpineodyssey.bt@gmail.com</li>
+                                <li>☎️ +975 77652012</li>
+                                <li>🕘 9:00 AM – 5:00 PM (BST)</li>
+                            </ul>
                         </div>
 
-                        {/* Contact Details Card */}
-                        <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 p-8 shadow-2xl">
-                            <h3 className="mb-6 text-xl font-bold text-white">
-                                Contact Details
-                            </h3>
-
-                            <div className="space-y-6">
-                                {/* Address */}
-                                <div className="flex items-start gap-4">
-                                    <div className="rounded-lg bg-white/10 p-3">
-                                        <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-blue-100">Address</p>
-                                        <p className="mt-1 text-white">
-                                            Olakha, Thimphu<br />
-                                            Kingdom of Bhutan
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Email */}
-                                <div className="flex items-start gap-4">
-                                    <div className="rounded-lg bg-white/10 p-3">
-                                        <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-blue-100">Email</p>
-                                        <a href="mailto:jigmed774@gmail.com" className="mt-1 text-white hover:text-cyan-200 transition-colors">
-                                            jigmed774@gmail.com
-                                        </a>
-                                    </div>
-                                </div>
-
-                                {/* Phone */}
-                                <div className="flex items-start gap-4">
-                                    <div className="rounded-lg bg-white/10 p-3">
-                                        <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-blue-100">Phone</p>
-                                        <a href="tel:+97577652012" className="mt-1 text-white hover:text-cyan-200 transition-colors">
-                                            +975 77652012
-                                        </a>
-                                        <p className="mt-1 text-xs text-blue-200">Mon-Sun, 9AM-5PM BST</p>
-                                    </div>
-                                </div>
-
-                                {/* Hours */}
-                                <div className="flex items-start gap-4">
-                                    <div className="rounded-lg bg-white/10 p-3">
-                                        <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-blue-100">Office Hours</p>
-                                        <p className="mt-1 text-white">
-                                            9:00 AM - 5:00 PM (BST)<br />
-                                            <span className="text-xs text-blue-200">7 days a week</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Emergency Contact */}
-                            <div className="mt-8 rounded-xl bg-white/10 p-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-8 w-8 rounded-full bg-red-500/20 flex items-center justify-center">
-                                        <svg className="h-4 w-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.998-.833-2.732 0L4.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-white">Emergency Contact</p>
-                                        <p className="text-xs text-blue-200">+975 77 123 456 (24/7)</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <iframe
+                            title="Bhutan Office Map"
+                            src="https://www.google.com/maps?q=Thimphu,Bhutan&output=embed"
+                            className="h-80 w-full rounded-3xl border-0 shadow-xl"
+                            loading="lazy"
+                        />
                     </div>
                 </div>
+
+                <footer className="mt-20 text-center text-sm text-blue-300/60">
+                    ✦ We respond to all inquiries within 4 business hours ✦
+                </footer>
             </div>
         </section>
     );

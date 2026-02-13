@@ -1,36 +1,91 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 export default function Footer() {
-    const currentYear = new Date().getFullYear()
+    const currentYear = new Date().getFullYear();
+    const [email, setEmail] = useState("");
+    const [newsletterStatus, setNewsletterStatus] = useState(null);
+    const [particles, setParticles] = useState([]);
+
+    /* Hydration-safe particles */
+    useEffect(() => {
+        const generated = Array.from({ length: 10 }).map((_, i) => ({
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            duration: `${5 + Math.random() * 5}s`,
+            delay: `${i * 0.4}s`,
+        }));
+        setParticles(generated);
+    }, []);
+
+    const handleNewsletter = (e) => {
+        e.preventDefault();
+        if (!email) return;
+        setNewsletterStatus("success");
+        setEmail("");
+        setTimeout(() => setNewsletterStatus(null), 3000);
+    };
+
+    const companyLinks = ["About", "Our Story", "Team", "Careers", "Press"];
+    const experienceLinks = [
+        "Cultural Tours",
+        "Trekking",
+        "Festivals",
+        "Wellness",
+        "Custom Travel",
+    ];
+    const supportLinks = [
+        "Contact",
+        "FAQ",
+        "Booking Guide",
+        "Privacy Policy",
+        "Terms",
+    ];
+
+    const socialLinks = [
+        { name: "Instagram", icon: "📷" },
+        { name: "Facebook", icon: "📘" },
+        { name: "YouTube", icon: "▶️" },
+        { name: "LinkedIn", icon: "💼" },
+        { name: "Twitter", icon: "🐦" },
+    ];
 
     return (
-        <footer className="relative bg-slate-950 text-slate-300">
-            {/* Subtle background */}
+        <footer className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-300">
+            {/* Background Particles */}
             <div className="pointer-events-none absolute inset-0">
-                <div className="absolute left-1/4 top-0 h-72 w-72 rounded-full bg-indigo-600/10 blur-3xl" />
-                <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-blue-600/5 blur-3xl" />
+                {particles.map((p, i) => (
+                    <div
+                        key={i}
+                        className="absolute h-1.5 w-1.5 rounded-full bg-indigo-400/30 animate-float"
+                        style={{
+                            top: p.top,
+                            left: p.left,
+                            animationDelay: p.delay,
+                            animationDuration: p.duration,
+                        }}
+                    />
+                ))}
             </div>
 
-            <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-                {/* Top grid */}
-                <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
+            <div className="relative mx-auto max-w-7xl px-6 py-20">
+                {/* Top Grid */}
+                <div className="grid gap-16 lg:grid-cols-2">
                     {/* Brand */}
                     <div className="space-y-6">
-                        <div>
-                            <h2 className="text-2xl font-semibold text-white">
-                                Travel Bhutan
-                            </h2>
-                            <p className="mt-1 text-sm text-indigo-300">
-                                Curated journeys through the Himalayan Kingdom
-                            </p>
-                        </div>
+                        <h2 className="text-2xl font-semibold bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">
+                            Alpine Odyssey
+                        </h2>
 
                         <p className="max-w-md leading-relaxed text-slate-300">
-                            We design responsible and immersive travel experiences in Bhutan,
-                            combining cultural depth, natural beauty, and sustainable tourism
-                            practices approved by the Royal Government of Bhutan.
+                            We design immersive and responsible travel experiences in Bhutan,
+                            blending cultural depth, natural beauty, and sustainable tourism
+                            aligned with the Royal Government of Bhutan.
                         </p>
 
                         {/* Newsletter */}
-                        <div className="max-w-md">
+                        <form onSubmit={handleNewsletter} className="max-w-md">
                             <label className="mb-2 block text-sm font-medium text-slate-200">
                                 Subscribe to updates
                             </label>
@@ -38,121 +93,86 @@ export default function Footer() {
                                 <input
                                     type="email"
                                     placeholder="Email address"
-                                    className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full rounded-lg border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
                                 />
-                                <button className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
+                                <button
+                                    type="submit"
+                                    className="rounded-lg bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:scale-105 hover:shadow-lg"
+                                >
                                     Subscribe
                                 </button>
                             </div>
+                            {newsletterStatus === "success" && (
+                                <p className="mt-2 text-xs text-emerald-400">
+                                    ✓ Thanks for subscribing!
+                                </p>
+                            )}
                             <p className="mt-2 text-xs text-slate-400">
                                 Occasional insights. No spam.
                             </p>
-                        </div>
+                        </form>
                     </div>
 
                     {/* Links */}
                     <div className="grid gap-10 sm:grid-cols-3">
-                        {[
-                            {
-                                title: 'Company',
-                                links: ['About', 'Our Story', 'Team', 'Careers', 'Press'],
-                            },
-                            {
-                                title: 'Experiences',
-                                links: ['Cultural Tours', 'Trekking', 'Festivals', 'Wellness', 'Custom Travel'],
-                            },
-                            {
-                                title: 'Support',
-                                links: ['Contact', 'FAQ', 'Booking Guide', 'Privacy Policy', 'Terms'],
-                            },
-                        ].map((section) => (
-                            <div key={section.title}>
-                                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-200">
-                                    {section.title}
-                                </h3>
-                                <ul className="space-y-3 text-sm">
-                                    {section.links.map((item) => (
-                                        <li key={item}>
-                                            <a
-                                                href="#"
-                                                className="transition hover:text-white"
-                                            >
-                                                {item}
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
+                        <FooterColumn title="Company" links={companyLinks} />
+                        <FooterColumn title="Experiences" links={experienceLinks} />
+                        <FooterColumn title="Support" links={supportLinks} />
                     </div>
                 </div>
 
                 {/* Divider */}
-                <div className="my-14 h-px bg-slate-800" />
+                <div className="my-14 h-px w-full bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
 
-                {/* Bottom */}
+                {/* Bottom Section */}
                 <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-                    {/* Legal */}
-                    <div className="text-sm">
-                        <p>
-                            © {currentYear} Travel Bhutan. All rights reserved.
-                        </p>
-                        <p className="mt-1 text-xs text-slate-500">
-                            Licensed tour operator • Department of Tourism, Bhutan
+                    {/* Copyright */}
+                    <div>
+                        <p className="text-sm">
+                            © {currentYear} Alpine Odyssey — Licensed Bhutan Tour Operator
                         </p>
                     </div>
 
                     {/* Social */}
-                    <div className="flex gap-4">
-                        {['Instagram', 'Facebook', 'YouTube', 'LinkedIn', 'Twitter'].map(
-                            (name) => (
-                                <a
-                                    key={name}
-                                    href="#"
-                                    aria-label={name}
-                                    className="rounded-lg border border-slate-700 px-3 py-2 text-xs transition hover:border-indigo-500 hover:text-white"
-                                >
-                                    {name}
-                                </a>
-                            )
-                        )}
-                    </div>
-
-                    {/* Trust */}
                     <div className="flex gap-3">
-                        <span className="rounded-md border border-slate-700 px-3 py-1.5 text-xs">
-                            Sustainable Tourism
-                        </span>
-                        <span className="rounded-md border border-slate-700 px-3 py-1.5 text-xs">
-                            Government Certified
-                        </span>
+                        {socialLinks.map((social) => (
+                            <a
+                                key={social.name}
+                                href="#"
+                                aria-label={social.name}
+                                className="rounded-lg border border-slate-700 px-3 py-2 transition hover:scale-110 hover:border-indigo-500"
+                            >
+                                <span className="flex items-center gap-1 text-sm">
+                                    <span>{social.icon}</span>
+                                    <span className="hidden sm:inline">{social.name}</span>
+                                </span>
+                            </a>
+                        ))}
                     </div>
                 </div>
 
-                {/* Contact */}
-                <div className="mt-12 grid gap-6 rounded-xl border border-slate-800 bg-slate-900 p-6 sm:grid-cols-3 text-sm">
-                    <div className="text-center">
-                        <div className="mb-1 font-medium text-slate-400">Email</div>
-                        <a
-                            href="mailto:info@travelbhutan.com"
-                            className="text-white hover:text-indigo-300"
-                        >
-                            jigmed774@gmail.com
-                        </a>
-                    </div>
-                    <div className="text-center">
-                        <div className="mb-1 font-medium text-slate-400">Phone</div>
-                        <a
-                            href="tel:+97517123456"
-                            className="text-white hover:text-indigo-300"
-                        >
-                            +975 77652012
-                        </a>
-                    </div>
-                    <div className="text-center">
-                        <div className="mb-1 font-medium text-slate-400">Office</div>
-                        <span className="text-white">Thimphu, Bhutan</span>
-                    </div>
+                {/* Contact Cards */}
+                <div className="mt-12 grid gap-4 rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-sm sm:grid-cols-3 text-sm">
+                    <ContactCard
+                        icon="✉️"
+                        label="Email"
+                        value="alpineodyssey.bt@gmail.com"
+                        href="mailto:alpineodyssey.bt@gmail.com"
+                    />
+                    <ContactCard
+                        icon="📞"
+                        label="Phone"
+                        value="+975 77652012"
+                        href="tel:+97577652012"
+                    />
+                    <ContactCard
+                        icon="🏢"
+                        label="Office"
+                        value="Thimphu, Bhutan"
+                        sub="Mon–Fri, 9AM–5PM"
+                    />
                 </div>
 
                 {/* Compliance */}
@@ -162,5 +182,53 @@ export default function Footer() {
                 </p>
             </div>
         </footer>
-    )
+    );
+}
+
+/* ---------- Reusable Components ---------- */
+
+function FooterColumn({ title, links }) {
+    return (
+        <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-200">
+                {title}
+            </h3>
+            <ul className="space-y-2 text-sm">
+                {links.map((link) => (
+                    <li key={link}>
+                        <a
+                            href="#"
+                            className="text-slate-400 transition hover:text-white hover:translate-x-1 inline-block"
+                        >
+                            {link}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+function ContactCard({ icon, label, value, href, sub }) {
+    const content = (
+        <>
+            <div className="mb-2 text-xl">{icon}</div>
+            <div className="text-xs text-slate-400">{label}</div>
+            <div className="font-semibold text-white">{value}</div>
+            {sub && <div className="text-xs text-slate-400">{sub}</div>}
+        </>
+    );
+
+    return href ? (
+        <a
+            href={href}
+            className="rounded-lg bg-slate-800/50 p-4 text-center transition hover:scale-105 hover:bg-slate-800"
+        >
+            {content}
+        </a>
+    ) : (
+        <div className="rounded-lg bg-slate-800/50 p-4 text-center">
+            {content}
+        </div>
+    );
 }

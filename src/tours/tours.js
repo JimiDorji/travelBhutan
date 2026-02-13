@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Star, Users, Calendar, ChevronRight } from "lucide-react";
 
 /* -------------------------------------------------------------------------- */
-/*                                  CONSTANTS                                 */
+/*                                   DATA                                     */
 /* -------------------------------------------------------------------------- */
 
 const CATEGORIES = [
@@ -20,101 +20,153 @@ const CATEGORIES = [
 const TOURS = [
     {
         title: "Bhutan Cultural Discovery",
-        image: "https://images.unsplash.com/photo-1580674285054-bed31e145f59",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/package/banner/thimphu-festivals.jpg",
         duration: "7 Days",
         rating: 4.9,
         travelers: "12 Guests",
         category: "cultural",
         tag: "Signature Journey",
-        highlights: ["Tiger’s Nest", "Punakha Dzong", "Village Life"],
-        description:
-            "A refined introduction to Bhutan’s living heritage through monasteries, villages, and timeless traditions.",
-    },
-    {
-        title: "Festival & Heritage Immersion",
-        image: "https://images.unsplash.com/photo-1605559424843-9d8a3b41c0b4",
-        duration: "10 Days",
-        rating: 4.8,
-        travelers: "8 Guests",
-        category: "festival",
-        tag: "Limited Access",
-        highlights: ["Paro Tshechu", "Sacred Mask Dances", "Cultural Walks"],
-        description:
-            "Witness Bhutan’s most revered festivals with rare access and expert cultural interpretation.",
+        highlights: ["Tiger's Nest", "Punakha Dzong", "Village Life"],
     },
     {
         title: "Himalayan Nature Escape",
-        image: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/featured/unique-bhutan-tour.jpg",
         duration: "8 Days",
         rating: 4.7,
         travelers: "6 Guests",
         category: "nature",
         tag: "Nature Focused",
         highlights: ["Forest Trails", "Wildlife", "Hot Stone Baths"],
-        description:
-            "An unhurried journey through pristine valleys, forests, and highland landscapes.",
-    },
-    {
-        title: "Sacred Monasteries Trail",
-        image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
-        duration: "6 Days",
-        rating: 4.9,
-        travelers: "10 Guests",
-        category: "spiritual",
-        tag: "Spiritual Path",
-        highlights: ["Gangtey", "Chimi Lhakhang", "Meditation"],
-        description:
-            "A contemplative journey guided by Bhutanese monastic traditions and sacred sites.",
     },
     {
         title: "Luxury Bhutan Retreat",
-        image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/package/banner/incredible-bhutan.jpg",
         duration: "9 Days",
         rating: 5.0,
         travelers: "4 Guests",
         category: "luxury",
         tag: "Ultra Luxury",
         highlights: ["Private Lodges", "Helicopter Views", "Personal Hosts"],
-        description:
-            "An exclusive retreat combining Bhutan’s finest lodges with complete privacy and care.",
     },
     {
         title: "Himalayan Adventure Trek",
-        image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/package/banner/jomolhari-trek.jpg",
         duration: "14 Days",
         rating: 4.8,
         travelers: "8 Guests",
         category: "adventure",
         tag: "Expedition",
         highlights: ["High Passes", "Remote Camps", "Expert Guides"],
-        description:
-            "A demanding yet deeply rewarding expedition across Bhutan’s remote Himalayan terrain.",
     },
+    {
+        title: "Bhutan Festival Experience",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/package/banner/punakha-festival.jpg",
+        duration: "10 Days",
+        rating: 4.9,
+        travelers: "10 Guests",
+        category: "festival",
+        tag: "Festival Special",
+        highlights: ["Paro Tshechu", "Masked Dances", "Monastery Blessings"],
+    },
+    {
+        title: "Spiritual Bhutan Journey",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/package/banner/pilgrimage-tour.jpg",
+        duration: "8 Days",
+        rating: 4.8,
+        travelers: "6 Guests",
+        category: "spiritual",
+        tag: "Mindful Travel",
+        highlights: ["Meditation Retreats", "Sacred Monasteries", "Local Rituals"],
+    },
+    {
+        title: "Eastern Bhutan Explorer",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/package/banner/10-days-merak-sakteng-trek.jpg",
+        duration: "12 Days",
+        rating: 4.7,
+        travelers: "8 Guests",
+        category: "adventure",
+        tag: "Off The Beaten Path",
+        highlights: ["Remote Valleys", "Nomadic Culture", "Untouched Landscapes"],
+    },
+    {
+        title: "Bhutan Honeymoon Escape",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/package/banner/perfect-bhutan-tour.jpg",
+        duration: "7 Days",
+        rating: 5.0,
+        travelers: "2 Guests",
+        category: "luxury",
+        tag: "Romantic Luxury",
+        highlights: ["Private Villas", "Couples Spa", "Sunset Dzongs"],
+    },
+    {
+        title: "Wildlife & Birding Expedition",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/package/banner/bird-watching-in-bhutan.jpg",
+        duration: "11 Days",
+        rating: 4.6,
+        travelers: "6 Guests",
+        category: "nature",
+        tag: "Eco Expedition",
+        highlights: ["Black-Necked Cranes", "National Parks", "Expert Naturalists"],
+    },
+    {
+        title: "Dagala Thousand Lakes Trek",
+        image:
+            "https://amen-api.flamingoitstudio.net/media/package/banner/dagala-trek.jpg",
+        duration: "6 Days",
+        rating: 4.7,
+        travelers: "8 Guests",
+        category: "adventure",
+        tag: "Scenic Trek",
+        highlights: ["Alpine Lakes", "Panoramic Peaks", "Highland Camps"],
+    },
+    {
+        title: "Bhutan Mountain Biking Adventure",
+        image:
+            "hhttps://amen-api.flamingoitstudio.net/media/package/banner/biking-in-bhutan.jpg", // replace with biking image if available
+        duration: "9 Days",
+        rating: 4.9,
+        travelers: "6 Guests",
+        category: "adventure",
+        tag: "Cycling Expedition",
+        highlights: [
+            "Himalayan Trails",
+            "Highland Pass Rides",
+            "Village Cycling Routes",
+        ],
+    },
+
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                               HELPER METHODS                               */
-/* -------------------------------------------------------------------------- */
-
-function getTagStyle(tag) {
-    switch (tag) {
-        case "Ultra Luxury":
-            return "from-purple-500 to-pink-500";
-        case "Limited Access":
-            return "from-red-500 to-rose-500";
-        case "Signature Journey":
-            return "from-amber-400 to-orange-500";
-        default:
-            return "from-cyan-500 to-indigo-500";
-    }
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                 COMPONENT                                  */
+/*                                   COMPONENT                                */
 /* -------------------------------------------------------------------------- */
 
 export default function Tours() {
     const [activeCategory, setActiveCategory] = useState("all");
+    const [visibleCount, setVisibleCount] = useState(6);
+    const [hoveredCard, setHoveredCard] = useState(null);
+    const [particles, setParticles] = useState([]);
+    const sectionRef = useRef(null);
+
+    /* Hydration-safe particle generation */
+    useEffect(() => {
+        const generated = Array.from({ length: 12 }).map((_, i) => ({
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            duration: `${6 + Math.random() * 4}s`,
+            delay: `${i * 0.3}s`,
+        }));
+        setParticles(generated);
+    }, []);
 
     const filteredTours = useMemo(() => {
         return activeCategory === "all"
@@ -122,120 +174,151 @@ export default function Tours() {
             : TOURS.filter((tour) => tour.category === activeCategory);
     }, [activeCategory]);
 
+    const visibleTours = filteredTours.slice(0, visibleCount);
+
     return (
         <section
             id="tours"
-            className="relative overflow-hidden bg-[#070b14] py-32"
+            ref={sectionRef}
+            className="relative overflow-hidden bg-gradient-to-b from-[#070b14] to-[#0a0f1a] py-24"
         >
-            {/* Aurora Background (soft motion) */}
-            <div className="pointer-events-none absolute inset-0 animate-float">
-                <div className="absolute -top-40 left-1/3 h-[600px] w-[600px] rounded-full bg-cyan-500/10 blur-[120px]" />
-                <div className="absolute bottom-0 right-1/4 h-[500px] w-[500px] rounded-full bg-indigo-500/10 blur-[120px]" />
+            {/* Background particles */}
+            <div className="pointer-events-none absolute inset-0">
+                {particles.map((p, i) => (
+                    <div
+                        key={i}
+                        className="absolute h-1 w-1 rounded-full bg-cyan-400/20 animate-float"
+                        style={{
+                            top: p.top,
+                            left: p.left,
+                            animationDelay: p.delay,
+                            animationDuration: p.duration,
+                        }}
+                    />
+                ))}
             </div>
 
             <div className="relative mx-auto max-w-7xl px-6">
                 {/* Header */}
-                <header className="mx-auto mb-24 max-w-3xl text-center animate-slide-down">
-                    <span className="mb-6 inline-block rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs tracking-widest text-cyan-200 backdrop-blur">
+                <header className="mx-auto mb-16 max-w-3xl text-center">
+                    <span className="inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs tracking-widest text-cyan-200/90">
                         CURATED JOURNEYS
                     </span>
 
-                    <h2 className="mt-6 text-5xl font-semibold tracking-tight text-white sm:text-6xl animate-slide-up-fade">
-                        Explore Bhutan
+                    <h2 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                        Explore <span className="text-cyan-400">Bhutan</span>
                     </h2>
 
-                    <p
-                        className="mt-6 text-lg leading-relaxed text-slate-300 animate-fade-in"
-                        style={{ animationDelay: "150ms" }}
-                    >
+                    <p className="mt-3 text-base leading-relaxed text-white/70">
                         Thoughtfully designed journeys shaped by culture, nature,
-                        spirituality, and time.
+                        spirituality, and authentic Bhutanese experiences.
                     </p>
                 </header>
 
-                {/* Filters (animated stagger) */}
-                <div className="mb-16 flex flex-wrap justify-center gap-3">
-                    {CATEGORIES.map(({ id, label }, i) => (
-                        <button
-                            key={id}
-                            onClick={() => setActiveCategory(id)}
-                            className={`rounded-full px-6 py-3 text-sm font-medium transition-all 
-                animate-pop-in ${activeCategory === id
-                                    ? "bg-white text-slate-900 shadow-lg"
-                                    : "bg-white/5 text-slate-300 hover:bg-white/10"
-                                }`}
-                            style={{ animationDelay: `${i * 80}ms` }}
-                        >
-                            {label}
-                        </button>
-                    ))}
+                {/* Category Filters */}
+                <div className="mb-12 flex flex-wrap justify-center gap-3">
+                    {CATEGORIES.map((cat) => {
+                        const isActive = activeCategory === cat.id;
+                        return (
+                            <button
+                                key={cat.id}
+                                onClick={() => {
+                                    setActiveCategory(cat.id);
+                                    setVisibleCount(6);
+                                }}
+                                className={`rounded-full px-5 py-2 text-sm font-medium transition ${isActive
+                                    ? "bg-cyan-600 text-white shadow-lg"
+                                    : "bg-white/5 text-white/70 hover:bg-white/10"
+                                    }`}
+                            >
+                                {cat.label}
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* Tours Grid */}
-                <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-                    {filteredTours.map((tour, i) => (
-                        <article
-                            key={tour.title}
-                            className="group relative rounded-3xl border border-white/10 bg-white/5 
-              backdrop-blur-xl transition-all duration-500 
-              hover:-translate-y-2 hover:bg-white/10
-              animate-slide-up-fade"
-                            style={{ animationDelay: `${150 + i * 120}ms` }}
-                        >
-                            {/* Image */}
-                            <div className="relative h-64 overflow-hidden rounded-t-3xl">
-                                <img
-                                    src={tour.image}
-                                    alt={tour.title}
-                                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                    {visibleTours.map((tour) => {
+                        const isHovered = hoveredCard === tour.title;
 
-                                {/* Tag */}
-                                <span
-                                    className={`absolute left-4 top-4 rounded-full bg-gradient-to-r ${getTagStyle(
-                                        tour.tag
-                                    )} px-4 py-1.5 text-xs font-semibold text-white`}
-                                >
-                                    {tour.tag}
-                                </span>
-                            </div>
-
-                            {/* Content */}
-                            <div className="p-8">
-                                <h3 className="mb-3 text-xl font-semibold text-white">
-                                    {tour.title}
-                                </h3>
-
-                                <p className="mb-6 text-sm leading-relaxed text-slate-300">
-                                    {tour.description}
-                                </p>
-
-                                {/* Meta */}
-                                <div className="mb-6 flex items-center gap-6 text-xs text-slate-400">
-                                    <div className="flex items-center gap-2">
-                                        <Calendar className="h-4 w-4" />
-                                        {tour.duration}
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Users className="h-4 w-4" />
-                                        {tour.travelers}
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                                        {tour.rating}
-                                    </div>
+                        return (
+                            <article
+                                key={tour.title}
+                                onMouseEnter={() => setHoveredCard(tour.title)}
+                                onMouseLeave={() => setHoveredCard(null)}
+                                className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:bg-white/10"
+                            >
+                                {/* Image */}
+                                <div className="relative h-52 overflow-hidden">
+                                    <img
+                                        src={tour.image}
+                                        alt={tour.title}
+                                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        loading="lazy"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                                 </div>
 
-                                {/* CTA (animated hover) */}
-                                <button className="inline-flex items-center gap-2 text-sm font-medium text-cyan-300 transition hover:text-cyan-200 group-hover:translate-x-1">
-                                    View Journey
-                                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                </button>
-                            </div>
-                        </article>
-                    ))}
+                                {/* Content */}
+                                <div className="p-5">
+                                    <h3 className="mb-2 text-lg font-semibold text-white">
+                                        {tour.title}
+                                    </h3>
+
+                                    {/* Meta */}
+                                    <div className="mb-3 flex items-center gap-4 text-xs text-white/60">
+                                        <span className="flex items-center gap-1">
+                                            <Calendar className="h-3 w-3" />
+                                            {tour.duration}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <Users className="h-3 w-3" />
+                                            {tour.travelers}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <Star className="h-3 w-3 text-amber-400" />
+                                            {tour.rating}
+                                        </span>
+                                    </div>
+
+                                    {/* Highlights */}
+                                    <div className="mb-4 flex flex-wrap gap-2">
+                                        {tour.highlights.map((h) => (
+                                            <span
+                                                key={h}
+                                                className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-white/60"
+                                            >
+                                                {h}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    {/* CTA */}
+                                    <button className="inline-flex items-center gap-1 text-sm font-medium text-cyan-300 transition hover:text-cyan-200">
+                                        View Journey
+                                        <ChevronRight
+                                            className={`h-4 w-4 transition-transform ${isHovered ? "translate-x-1" : ""
+                                                }`}
+                                        />
+                                    </button>
+                                </div>
+                            </article>
+                        );
+                    })}
                 </div>
+
+                {/* View More Button */}
+                {visibleCount < filteredTours.length && (
+                    <div className="mt-14 text-center">
+                        <button
+                            onClick={() => setVisibleCount((prev) => prev + 6)}
+                            className="rounded-full bg-cyan-600 px-8 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
+                        >
+                            View More Journeys
+                        </button>
+                    </div>
+                )}
             </div>
         </section>
     );
